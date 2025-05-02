@@ -1,1 +1,164 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delhi Flood Relief Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .user-marker {
+            width: 20px;
+            height: 20px;
+            background: #1a73e8;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(26, 115, 232, 0.5);
+        }
+        .marker-start {
+            width: 20px;
+            height: 20px;
+            background: #2ecc71;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+        }
+        .marker-end {
+            width: 20px;
+            height: 20px;
+            background: #e74c3c;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+        .report-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+        }
+        .report-form.active {
+            display: block;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .language-selector {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .stats-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Delhi Flood Relief Map</h1>
+            <div class="controls">
+                <button id="locateMe"><i class="fas fa-location-arrow"></i> Locate Me</button>
+                <select id="safeLocationType">
+                    <option value="shelter">Shelters</option>
+                    <option value="hospital">Hospitals</option>
+                    <option value="all">All Safe Locations</option>
+                </select>
+                <button id="reportFlood"><i class="fas fa-exclamation-triangle"></i> Report Flood</button>
+            </div>
+        </header>
+        <div id="map"></div>
+        <div id="routeInfo" class="route-info">
+            <h3>Route Information</h3>
+            <p>Select a safe location to see the best route</p>
+        </div>
+    </div>
+
+    <!-- Report Form -->
+    <div id="reportForm" class="report-form">
+        <h3>Report Flooded Area</h3>
+        <form id="floodReportForm">
+            <div class="form-group">
+                <label for="floodLocation">Location</label>
+                <input type="text" id="floodLocation" readonly>
+            </div>
+            <div class="form-group">
+                <label for="floodSeverity">Severity</label>
+                <select id="floodSeverity">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="floodDescription">Description</label>
+                <textarea id="floodDescription" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="floodPhoto">Upload Photo</label>
+                <input type="file" id="floodPhoto" accept="image/*">
+            </div>
+            <button type="submit">Submit Report</button>
+            <button type="button" id="cancelReport">Cancel</button>
+        </form>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Language Selector -->
+    <select class="language-selector" id="languageSelector">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+    </select>
+
+    <!-- Stats Panel -->
+    <div class="stats-panel">
+        <h4>Flood Statistics</h4>
+        <p>Affected Areas: <span id="affectedCount">0</span></p>
+        <p>Safe Locations: <span id="safeCount">0</span></p>
+        <p>User Reports: <span id="reportCount">0</span></p>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <script src="app.js"></script>
+</body>
+</html> 
